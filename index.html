@@ -122,6 +122,16 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
 .btn-danger { color: var(--red); border-color: rgba(239,68,68,0.2); }
 .btn-danger:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); }
 
+/* ── WORKOUT PICKER ── */
+.wo-pick-item {
+  width: 100%; padding: 12px 14px; background: none; border: none;
+  color: var(--text-primary); text-align: left; cursor: pointer; transition: background 0.15s;
+  display: block;
+}
+.wo-pick-item:hover { background: var(--bg-hover); }
+.wo-pick-item.selected { background: rgba(245,158,11,0.08); }
+.wo-picker-open { border-color: rgba(245,158,11,0.4) !important; }
+
 /* ── EXERCISE CARD ── */
 .ex-card {
   background: var(--bg-card); border: 1px solid var(--border-faint); border-radius: 13px;
@@ -506,7 +516,35 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
       <div style="margin-bottom:10px;"><span class="badge" id="dash-weekday-badge">Вторник</span></div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;color:var(--text-primary);line-height:1.1;margin-bottom:3px;" id="dash-day-name">Верх А</div>
       <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;" id="dash-day-detail">Грудь / Трицепс</div>
-      <button class="btn-primary pulse" onclick="startWorkout()">
+
+      <!-- Workout selector dropdown -->
+      <div style="position:relative;margin-bottom:10px;">
+        <button onclick="toggleWorkoutPicker(event)" style="width:100%;padding:11px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;color:var(--text-primary);font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:border-color 0.2s;" id="wo-picker-btn">
+          <span id="wo-picker-label">📋 Выбрать тренировку</span>
+          <svg style="width:16px;height:16px;stroke:var(--text-muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;" id="wo-picker-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div id="wo-picker-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+          <button onclick="selectWorkout('Вторник')" class="wo-pick-item" id="wpi-Вторник">
+            <div style="font-weight:700;font-size:14px;">Верх А</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Грудь / Трицепс / Спина</div>
+            <div style="font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px;">ВТ</div>
+          </button>
+          <div style="height:1px;background:var(--border-faint);"></div>
+          <button onclick="selectWorkout('Четверг')" class="wo-pick-item" id="wpi-Четверг">
+            <div style="font-weight:700;font-size:14px;">Ноги</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Квадры / Бицепс бедра / Бицепс</div>
+            <div style="font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px;">ЧТ</div>
+          </button>
+          <div style="height:1px;background:var(--border-faint);"></div>
+          <button onclick="selectWorkout('Суббота')" class="wo-pick-item" id="wpi-Суббота">
+            <div style="font-weight:700;font-size:14px;">Плечи</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Плечи / Руки / Пресс</div>
+            <div style="font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px;">СБ</div>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-primary pulse" id="start-wo-btn" onclick="startWorkout()">
         <svg class="ic ic-16" aria-hidden="true"><use href="#ic-bolt"></use></svg> НАЧАТЬ ТРЕНИРОВКУ
       </button>
     </div>
@@ -545,8 +583,10 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
     <div class="timer-pill" id="wo-timer-pill"><svg class="ic ic-13" aria-hidden="true"><use href="#ic-timer"></use></svg><span id="wo-timer">00:00</span></div>
   </div>
   <div class="px" style="padding-top:12px;">
-    <div id="wo-idle" style="display:none;text-align:center;padding:34px 10px;color:var(--text-dim);font-size:12px;line-height:1.6;">
-      Нет активной тренировки.<br>Нажми <strong style="color:var(--amber);">«НАЧАТЬ ТРЕНИРОВКУ»</strong> на главной.
+    <div id="wo-idle" style="display:none;text-align:center;padding:48px 16px 34px;">
+      <div style="font-size:44px;margin-bottom:14px;">💪</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text-primary);margin-bottom:8px;">НЕТ АКТИВНОЙ ТРЕНИРОВКИ</div>
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Выбери тренировку на главной<br>и нажми <strong style="color:var(--amber);">«НАЧАТЬ ТРЕНИРОВКУ»</strong></div>
     </div>
 
     <div id="wo-active">
@@ -651,9 +691,6 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
         <div style="font-size:11px;color:var(--text-muted);" id="det-date"></div>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn-icon" onclick="editSession()" title="Редактировать тренировку">
-          <svg class="ic ic-15" aria-hidden="true"><use href="#ic-edit"></use></svg>
-        </button>
         <button class="btn-icon btn-danger" onclick="confirmDeleteSession()" title="Удалить тренировку">
           <svg class="ic ic-15" aria-hidden="true"><use href="#ic-trash"></use></svg>
         </button>
@@ -859,8 +896,10 @@ function renderDashboard() {
   // Today card
   const wd = WEEKDAY_RU[new Date().getDay()];
   document.getElementById('dash-weekday-badge').textContent = wd;
-  document.getElementById('dash-day-name').textContent = (plan.next ? 'Следующая: ' : '') + plan.day + ' — ' + plan.name;
-  document.getElementById('dash-day-detail').textContent = plan.detail;
+  if (!selectedWorkoutDay) {
+    document.getElementById('dash-day-name').textContent = (plan.next ? 'Следующая: ' : '') + plan.day + ' — ' + plan.name;
+    document.getElementById('dash-day-detail').textContent = plan.detail;
+  }
 
   // Stats
   const now = new Date();
@@ -940,6 +979,51 @@ function buildHistItem(s, lSets, lTon, clickable = true) {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  WORKOUT PICKER
+// ═══════════════════════════════════════════════════════════
+let selectedWorkoutDay = null; // null = use today's plan
+
+function toggleWorkoutPicker(e) {
+  e.stopPropagation();
+  const dd = document.getElementById('wo-picker-dropdown');
+  const btn = document.getElementById('wo-picker-btn');
+  const arrow = document.getElementById('wo-picker-arrow');
+  const isOpen = dd.style.display !== 'none';
+  dd.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('wo-picker-open', !isOpen);
+  arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function selectWorkout(day) {
+  selectedWorkoutDay = day;
+  const info = PLAN_INFO[day];
+  const label = document.getElementById('wo-picker-label');
+  if (label) label.textContent = `✅ ${info.name} — ${day}`;
+  // Update card display
+  document.getElementById('dash-day-name').textContent = day + ' — ' + info.name;
+  document.getElementById('dash-day-detail').textContent = info.detail;
+  // Highlight selected
+  ['Вторник','Четверг','Суббота'].forEach(d => {
+    const el = document.getElementById('wpi-' + d);
+    if (el) el.classList.toggle('selected', d === day);
+  });
+  // Close dropdown
+  document.getElementById('wo-picker-dropdown').style.display = 'none';
+  document.getElementById('wo-picker-btn').classList.remove('wo-picker-open');
+  document.getElementById('wo-picker-arrow').style.transform = '';
+}
+
+// Close picker on outside click
+document.addEventListener('click', () => {
+  const dd = document.getElementById('wo-picker-dropdown');
+  if (dd) dd.style.display = 'none';
+  const btn = document.getElementById('wo-picker-btn');
+  if (btn) btn.classList.remove('wo-picker-open');
+  const arrow = document.getElementById('wo-picker-arrow');
+  if (arrow) arrow.style.transform = '';
+});
+
+// ═══════════════════════════════════════════════════════════
 //  WORKOUT INIT
 // ═══════════════════════════════════════════════════════════
 function startWorkout() {
@@ -950,7 +1034,9 @@ function startWorkout() {
     return;
   }
   // Prepare UI first (without side-effects on timer)
-  const plan = getTodayPlan();
+  const plan = selectedWorkoutDay
+    ? { day: selectedWorkoutDay, ...PLAN_INFO[selectedWorkoutDay] }
+    : getTodayPlan();
   const exList = getExercises().filter(e => e.day === plan.day).sort((a,b) => a.order - b.order);
   WO.sessionId = Date.now();
   WO.sets = {};
