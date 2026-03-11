@@ -3,7 +3,7 @@
 //  Стратегия: Cache-First для shell, Network-First для шрифтов
 // ═══════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'mycut-v1';
+const CACHE_NAME = 'mycut-v2';
 
 // Всё, что нужно закешировать при первой установке
 const PRECACHE_ASSETS = [

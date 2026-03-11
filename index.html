@@ -80,7 +80,7 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
   position: relative; overflow: hidden;
 }
 .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent); }
-.card-today { background: linear-gradient(135deg, #120900 0%, #0D1117 70%); border-color: rgba(245,158,11,0.28); box-shadow: 0 4px 24px rgba(245,158,11,0.07); }
+.card-today { background: linear-gradient(135deg, #120900 0%, #0D1117 70%); border-color: rgba(245,158,11,0.28); box-shadow: 0 4px 24px rgba(245,158,11,0.07); overflow: visible !important; }
 .card-record { background: linear-gradient(135deg, #071510 0%, #0D1117 70%); border-color: rgba(16,185,129,0.2); }
 
 /* ── SECTION TITLE ── */
@@ -121,16 +121,6 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
 .btn-icon:hover { background: var(--bg-hover); color: var(--text-primary); }
 .btn-danger { color: var(--red); border-color: rgba(239,68,68,0.2); }
 .btn-danger:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); }
-
-/* ── WORKOUT PICKER ── */
-.wo-pick-item {
-  width: 100%; padding: 12px 14px; background: none; border: none;
-  color: var(--text-primary); text-align: left; cursor: pointer; transition: background 0.15s;
-  display: block;
-}
-.wo-pick-item:hover { background: var(--bg-hover); }
-.wo-pick-item.selected { background: rgba(245,158,11,0.08); }
-.wo-picker-open { border-color: rgba(245,158,11,0.4) !important; }
 
 /* ── EXERCISE CARD ── */
 .ex-card {
@@ -397,6 +387,118 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
 .ic-15 { width: 15px; height: 15px; }
 .ic-16 { width: 16px; height: 16px; }
 .ic-19 { width: 19px; height: 19px; }
+
+/* ── WORKOUT PICKER ── */
+.wo-picker-btn {
+  width:100%; padding:11px 14px; background:var(--bg-surface);
+  border:1px solid var(--border); border-radius:12px; color:var(--text-primary);
+  font-size:13px; font-weight:600; text-align:left; cursor:pointer;
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  transition:border-color 0.2s; margin-bottom:10px;
+}
+.wo-picker-btn:hover { border-color:rgba(245,158,11,0.3); }
+.wo-picker-btn.open { border-color:rgba(245,158,11,0.45); }
+.wo-picker-dropdown {
+  position:fixed; background:var(--bg-card); border:1px solid rgba(245,158,11,0.2);
+  border-radius:14px; overflow:hidden; z-index:9999;
+  box-shadow:0 12px 40px rgba(0,0,0,0.7);
+  display:none;
+}
+.wo-picker-dropdown.open { display:block; }
+.wo-pick-item {
+  width:100%; padding:13px 16px; background:none; border:none;
+  color:var(--text-primary); text-align:left; cursor:pointer;
+  transition:background 0.15s; display:block; border-bottom:1px solid var(--border-faint);
+}
+.wo-pick-item:last-child { border-bottom:none; }
+.wo-pick-item:hover { background:var(--bg-hover); }
+.wo-pick-item.selected { background:rgba(245,158,11,0.08); }
+.wo-pick-item .pi-name { font-weight:700; font-size:14px; }
+.wo-pick-item .pi-detail { font-size:11px; color:var(--text-muted); margin-top:1px; }
+.wo-pick-item .pi-tag { font-size:10px; color:var(--amber); font-family:'JetBrains Mono',monospace; margin-top:2px; }
+.wo-pick-divider { padding:6px 16px 4px; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); font-family:'JetBrains Mono',monospace; border-bottom:1px solid var(--border-faint); background:var(--bg-surface); }
+
+/* ── BUILDER / PROFILE OVERLAY ── */
+.sheet-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:200;
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.25s; padding:0 10px;
+}
+.sheet-overlay.open { opacity:1; pointer-events:all; }
+.sheet-overlay .sheet {
+  transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.34,1.1,0.64,1);
+}
+.sheet-overlay.open .sheet { transform:translateY(0); }
+
+/* ── BUILDER SPECIFIC ── */
+.builder-tabs { display:flex; gap:6px; margin-bottom:18px; }
+.builder-tab {
+  flex:1; padding:9px; border-radius:10px; border:1px solid var(--border-faint);
+  background:var(--bg-surface); color:var(--text-muted); font-size:12px; font-weight:700;
+  cursor:pointer; transition:all 0.2s; text-align:center;
+}
+.builder-tab.active { background:rgba(245,158,11,0.1); border-color:rgba(245,158,11,0.35); color:var(--amber); }
+.builder-input {
+  width:100%; padding:11px 14px; background:var(--bg-surface); border:1px solid var(--border-faint);
+  border-radius:10px; color:var(--text-primary); font-size:14px; font-family:'DM Sans',sans-serif;
+  outline:none; transition:border-color 0.2s; margin-bottom:8px; display:block;
+}
+.builder-input:focus { border-color:rgba(245,158,11,0.45); }
+.builder-ex-row {
+  display:flex; align-items:center; gap:8px; padding:10px 12px;
+  background:var(--bg-surface); border:1px solid var(--border-faint); border-radius:10px; margin-bottom:6px;
+}
+.builder-ex-row .ex-label { flex:1; min-width:0; }
+.builder-ex-row .ex-nm { font-size:13px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.builder-ex-row .ex-grp { font-size:10px; color:var(--amber); font-family:'JetBrains Mono',monospace; }
+.ex-bw-badge { font-size:9px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); color:var(--blue); padding:1px 6px; border-radius:10px; font-family:'JetBrains Mono',monospace; margin-left:4px; }
+.plan-list-item {
+  display:flex; align-items:center; gap:10px; padding:12px 14px;
+  background:var(--bg-surface); border:1px solid var(--border-faint); border-radius:11px; margin-bottom:7px;
+  cursor:pointer; transition:border-color 0.2s;
+}
+.plan-list-item:hover { border-color:rgba(245,158,11,0.25); }
+.plan-list-item.selected-edit { border-color:rgba(245,158,11,0.45); background:rgba(245,158,11,0.05); }
+.pli-name { font-weight:700; font-size:14px; color:var(--text-primary); }
+.pli-sub { font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+.bw-toggle {
+  display:flex; align-items:center; gap:8px; cursor:pointer;
+  padding:9px 12px; background:var(--bg-surface); border:1px solid var(--border-faint);
+  border-radius:10px; transition:all 0.2s; user-select:none;
+}
+.bw-toggle.on { border-color:rgba(59,130,246,0.35); background:rgba(59,130,246,0.07); }
+.bw-dot { width:18px; height:18px; border-radius:5px; border:2px solid var(--text-dim); display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; font-size:11px; color:transparent; }
+.bw-toggle.on .bw-dot { background:var(--blue); border-color:var(--blue); color:#fff; }
+.bw-lbl { font-size:12px; color:var(--text-muted); font-weight:600; }
+.bw-toggle.on .bw-lbl { color:var(--blue); }
+
+/* ── PROFILE SPECIFIC ── */
+.profile-ex-row {
+  display:flex; align-items:center; gap:8px; padding:9px 12px;
+  background:var(--bg-surface); border:1px solid var(--border-faint); border-radius:10px; margin-bottom:6px;
+}
+.profile-ex-row .pex-label { flex:1; min-width:0; }
+.profile-ex-row .pex-name { font-size:13px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.profile-ex-row .pex-group { font-size:10px; color:var(--amber); font-family:'JetBrains Mono',monospace; }
+.pex-inp { width:80px; padding:6px 8px; background:var(--bg-card); border:1px solid var(--border-faint); border-radius:8px; color:var(--text-primary); font-size:14px; font-family:'JetBrains Mono',monospace; text-align:center; outline:none; }
+.pex-inp:focus { border-color:rgba(245,158,11,0.45); }
+.pex-lbl { font-size:10px; color:var(--text-muted); text-align:center; margin-top:2px; font-family:'JetBrains Mono',monospace; }
+
+/* ── HEADER BTN LARGE ── */
+.btn-header-lg {
+  width:44px; height:44px; border-radius:12px; border:1.5px solid rgba(245,158,11,0.35);
+  background:rgba(245,158,11,0.1); color:var(--amber); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;
+  font-size:24px; font-weight:700; line-height:1;
+}
+.btn-header-lg:hover { background:rgba(245,158,11,0.2); border-color:rgba(245,158,11,0.5); }
+.btn-header-lg:active { transform:scale(0.94); }
+.btn-header-profile {
+  width:44px; height:44px; border-radius:12px; border:1.5px solid var(--border-faint);
+  background:var(--bg-surface); color:var(--text-muted); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; font-size:20px;
+}
+.btn-header-profile:hover { background:var(--bg-hover); color:var(--text-primary); }
 </style>
 </head>
 <body>
@@ -506,45 +608,23 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
 <div id="screen-dashboard" class="screen active">
   <div class="app-header">
     <div><div class="logo">MyCut</div><div class="tagline">Heavy Duty Tracker</div></div>
-    <div style="display:flex;gap:7px;align-items:center;">
+    <div style="display:flex;gap:8px;align-items:center;">
       <div class="badge">🔥 <span id="streak-num">0</span></div>
+      <button class="btn-header-profile" onclick="openProfile()" title="Профиль">👤</button>
+      <button class="btn-header-lg" onclick="openBuilder('new')" title="Создать тренировку">+</button>
     </div>
   </div>
   <div class="px" style="padding-top:14px;">
     <!-- Today Card -->
-    <div class="card card-today mb14">
+    <div class="card card-today mb14" style="overflow:visible;">
       <div style="margin-bottom:10px;"><span class="badge" id="dash-weekday-badge">Вторник</span></div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;color:var(--text-primary);line-height:1.1;margin-bottom:3px;" id="dash-day-name">Верх А</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;" id="dash-day-detail">Грудь / Трицепс</div>
-
-      <!-- Workout selector dropdown -->
-      <div style="position:relative;margin-bottom:10px;">
-        <button onclick="toggleWorkoutPicker(event)" style="width:100%;padding:11px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;color:var(--text-primary);font-size:13px;font-weight:600;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:border-color 0.2s;" id="wo-picker-btn">
-          <span id="wo-picker-label">📋 Выбрать тренировку</span>
-          <svg style="width:16px;height:16px;stroke:var(--text-muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;" id="wo-picker-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div id="wo-picker-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-          <button onclick="selectWorkout('Вторник')" class="wo-pick-item" id="wpi-Вторник">
-            <div style="font-weight:700;font-size:14px;">Верх А</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Грудь / Трицепс / Спина</div>
-            <div style="font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px;">ВТ</div>
-          </button>
-          <div style="height:1px;background:var(--border-faint);"></div>
-          <button onclick="selectWorkout('Четверг')" class="wo-pick-item" id="wpi-Четверг">
-            <div style="font-weight:700;font-size:14px;">Ноги</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Квадры / Бицепс бедра / Бицепс</div>
-            <div style="font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px;">ЧТ</div>
-          </button>
-          <div style="height:1px;background:var(--border-faint);"></div>
-          <button onclick="selectWorkout('Суббота')" class="wo-pick-item" id="wpi-Суббота">
-            <div style="font-weight:700;font-size:14px;">Плечи</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Плечи / Руки / Пресс</div>
-            <div style="font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:2px;">СБ</div>
-          </button>
-        </div>
-      </div>
-
-      <button class="btn-primary pulse" id="start-wo-btn" onclick="startWorkout()">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text-primary);line-height:1.1;margin-bottom:2px;" id="dash-day-name">Верх А</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="dash-day-detail">Грудь / Трицепс</div>
+      <button class="wo-picker-btn" id="wo-picker-btn" onclick="toggleWorkoutPicker(event)">
+        <span id="wo-picker-label">📋 Выбрать тренировку</span>
+        <svg id="wo-picker-arrow" style="width:16px;height:16px;flex-shrink:0;stroke:var(--text-muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+      <button class="btn-primary pulse" onclick="startWorkout()">
         <svg class="ic ic-16" aria-hidden="true"><use href="#ic-bolt"></use></svg> НАЧАТЬ ТРЕНИРОВКУ
       </button>
     </div>
@@ -583,10 +663,8 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
     <div class="timer-pill" id="wo-timer-pill"><svg class="ic ic-13" aria-hidden="true"><use href="#ic-timer"></use></svg><span id="wo-timer">00:00</span></div>
   </div>
   <div class="px" style="padding-top:12px;">
-    <div id="wo-idle" style="display:none;text-align:center;padding:48px 16px 34px;">
-      <div style="font-size:44px;margin-bottom:14px;">💪</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text-primary);margin-bottom:8px;">НЕТ АКТИВНОЙ ТРЕНИРОВКИ</div>
-      <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">Выбери тренировку на главной<br>и нажми <strong style="color:var(--amber);">«НАЧАТЬ ТРЕНИРОВКУ»</strong></div>
+    <div id="wo-idle" style="display:none;text-align:center;padding:34px 10px;color:var(--text-dim);font-size:12px;line-height:1.6;">
+      Нет активной тренировки.<br>Нажми <strong style="color:var(--amber);">«НАЧАТЬ ТРЕНИРОВКУ»</strong> на главной.
     </div>
 
     <div id="wo-active">
@@ -649,6 +727,90 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
   </button>
 </nav>
 
+
+<!-- ════ WORKOUT PICKER DROPDOWN ════ -->
+<div class="wo-picker-dropdown" id="wo-picker-dropdown">
+  <div class="wo-pick-divider">Встроенные тренировки</div>
+  <button class="wo-pick-item" id="wpi-Вторник" onclick="selectWorkout({type:'builtin',day:'Вторник'})">
+    <div class="pi-name">Верх А</div><div class="pi-detail">Грудь / Трицепс / Спина</div><div class="pi-tag">ВТ</div>
+  </button>
+  <button class="wo-pick-item" id="wpi-Четверг" onclick="selectWorkout({type:'builtin',day:'Четверг'})">
+    <div class="pi-name">Ноги</div><div class="pi-detail">Квадры / Бицепс бедра / Бицепс</div><div class="pi-tag">ЧТ</div>
+  </button>
+  <button class="wo-pick-item" id="wpi-Суббота" onclick="selectWorkout({type:'builtin',day:'Суббота'})">
+    <div class="pi-name">Плечи</div><div class="pi-detail">Плечи / Руки / Пресс</div><div class="pi-tag">СБ</div>
+  </button>
+  <div class="wo-pick-divider" id="custom-dd-divider" style="display:none;">Мои тренировки</div>
+  <div id="custom-dd-list"></div>
+</div>
+
+<!-- ════ WORKOUT BUILDER ════ -->
+<div class="sheet-overlay" id="builder-overlay">
+  <div class="sheet" style="width:min(720px,calc(100vw - 20px));max-height:92dvh;overflow-y:auto;scrollbar-width:none;">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text-primary);">КОНСТРУКТОР</div>
+      <button class="btn-icon" onclick="closeBuilder()"><svg class="ic ic-15" aria-hidden="true"><use href="#ic-x"></use></svg></button>
+    </div>
+    <div class="builder-tabs">
+      <button class="builder-tab active" id="btab-new" onclick="switchBuilderTab('new')">+ Новая</button>
+      <button class="builder-tab" id="btab-edit" onclick="switchBuilderTab('edit')">✏️ Изменить</button>
+    </div>
+
+    <!-- TAB NEW -->
+    <div id="builder-tab-new">
+      <div class="sec-title" style="margin-bottom:8px;">Название тренировки</div>
+      <input class="builder-input" id="b-plan-name" placeholder="Например: Спина + Бицепс" maxlength="40">
+      <input class="builder-input" id="b-plan-detail" placeholder="Описание (необязательно)" maxlength="60">
+      <div class="sec-title" style="margin-top:4px;margin-bottom:8px;">Добавить упражнение</div>
+      <input class="builder-input" id="b-ex-name" placeholder="Название упражнения" maxlength="60">
+      <input class="builder-input" id="b-ex-group" placeholder="Группа мышц (например: Грудь)" maxlength="30">
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <div class="bw-toggle" id="bw-new" onclick="toggleBW('new')"><div class="bw-dot" id="bwd-new">✓</div><span class="bw-lbl">Без отягощения</span></div>
+        <button class="btn-add" onclick="addExToBuilder('new')" style="flex-shrink:0;"><svg class="ic ic-12" aria-hidden="true"><use href="#ic-bolt"></use></svg> Добавить</button>
+      </div>
+      <div id="b-ex-list"></div>
+      <div id="b-ex-empty" style="text-align:center;padding:18px;color:var(--text-dim);font-size:12px;">Добавь хотя бы одно упражнение</div>
+      <button class="btn-primary" style="margin-top:8px;" onclick="saveNewPlan()"><svg class="ic ic-16" aria-hidden="true"><use href="#ic-save"></use></svg> СОХРАНИТЬ ТРЕНИРОВКУ</button>
+    </div>
+
+    <!-- TAB EDIT -->
+    <div id="builder-tab-edit" style="display:none;">
+      <div class="sec-title" style="margin-bottom:8px;">Выбери тренировку</div>
+      <div id="b-plans-list"></div>
+      <div id="b-edit-section" style="display:none;margin-top:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--amber);" id="b-editing-label">РЕДАКТИРОВАНИЕ</div>
+          <button id="b-delete-btn" onclick="deleteEditingPlan()" style="padding:6px 10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;color:var(--red);font-size:11px;font-weight:700;cursor:pointer;display:none;">🗑 Удалить</button>
+        </div>
+        <div class="sec-title" style="margin-bottom:8px;">Добавить упражнение</div>
+        <input class="builder-input" id="e-ex-name" placeholder="Название упражнения" maxlength="60">
+        <input class="builder-input" id="e-ex-group" placeholder="Группа мышц" maxlength="30">
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <div class="bw-toggle" id="bw-edit" onclick="toggleBW('edit')"><div class="bw-dot" id="bwd-edit">✓</div><span class="bw-lbl">Без отягощения</span></div>
+          <button class="btn-add" onclick="addExToBuilder('edit')" style="flex-shrink:0;"><svg class="ic ic-12" aria-hidden="true"><use href="#ic-bolt"></use></svg> Добавить</button>
+        </div>
+        <div id="e-ex-list"></div>
+        <div id="e-ex-empty" style="text-align:center;padding:18px;color:var(--text-dim);font-size:12px;display:none;">Нет упражнений</div>
+        <button class="btn-primary" style="margin-top:8px;" onclick="saveEditPlan()"><svg class="ic ic-16" aria-hidden="true"><use href="#ic-save"></use></svg> СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PROFILE ════ -->
+<div class="sheet-overlay" id="profile-overlay">
+  <div class="sheet" style="width:min(720px,calc(100vw - 20px));max-height:92dvh;overflow-y:auto;scrollbar-width:none;">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text-primary);">ПРОФИЛЬ</div>
+      <button class="btn-icon" onclick="closeProfile()"><svg class="ic ic-15" aria-hidden="true"><use href="#ic-x"></use></svg></button>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Укажи свой <strong style="color:var(--amber);">рабочий вес</strong> для каждого упражнения. Рекорд (PR) засчитывается когда ты превышаешь этот вес.</div>
+    <div id="profile-ex-list"></div>
+    <button class="btn-primary" style="margin-top:8px;" onclick="saveProfile()"><svg class="ic ic-16" aria-hidden="true"><use href="#ic-save"></use></svg> СОХРАНИТЬ ПРОФИЛЬ</button>
+  </div>
+</div>
 </div><!-- /#app -->
 
 <!-- ════ TOAST ════ -->
@@ -691,6 +853,9 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
         <div style="font-size:11px;color:var(--text-muted);" id="det-date"></div>
       </div>
       <div style="display:flex;gap:8px;">
+        <button class="btn-icon" onclick="editSession()" title="Редактировать тренировку">
+          <svg class="ic ic-15" aria-hidden="true"><use href="#ic-edit"></use></svg>
+        </button>
         <button class="btn-icon btn-danger" onclick="confirmDeleteSession()" title="Удалить тренировку">
           <svg class="ic ic-15" aria-hidden="true"><use href="#ic-trash"></use></svg>
         </button>
@@ -888,7 +1053,7 @@ function getTodayPlan() {
 // ═══════════════════════════════════════════════════════════
 //  DASHBOARD
 // ═══════════════════════════════════════════════════════════
-function renderDashboard() {
+function _renderDashboardOrig() {
   const plan = getTodayPlan();
   const sessions = get(K.sess) || [];
   const sets = get(K.sets) || [];
@@ -896,10 +1061,8 @@ function renderDashboard() {
   // Today card
   const wd = WEEKDAY_RU[new Date().getDay()];
   document.getElementById('dash-weekday-badge').textContent = wd;
-  if (!selectedWorkoutDay) {
-    document.getElementById('dash-day-name').textContent = (plan.next ? 'Следующая: ' : '') + plan.day + ' — ' + plan.name;
-    document.getElementById('dash-day-detail').textContent = plan.detail;
-  }
+  document.getElementById('dash-day-name').textContent = (plan.next ? 'Следующая: ' : '') + plan.day + ' — ' + plan.name;
+  document.getElementById('dash-day-detail').textContent = plan.detail;
 
   // Stats
   const now = new Date();
@@ -979,54 +1142,9 @@ function buildHistItem(s, lSets, lTon, clickable = true) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  WORKOUT PICKER
-// ═══════════════════════════════════════════════════════════
-let selectedWorkoutDay = null; // null = use today's plan
-
-function toggleWorkoutPicker(e) {
-  e.stopPropagation();
-  const dd = document.getElementById('wo-picker-dropdown');
-  const btn = document.getElementById('wo-picker-btn');
-  const arrow = document.getElementById('wo-picker-arrow');
-  const isOpen = dd.style.display !== 'none';
-  dd.style.display = isOpen ? 'none' : 'block';
-  btn.classList.toggle('wo-picker-open', !isOpen);
-  arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
-}
-
-function selectWorkout(day) {
-  selectedWorkoutDay = day;
-  const info = PLAN_INFO[day];
-  const label = document.getElementById('wo-picker-label');
-  if (label) label.textContent = `✅ ${info.name} — ${day}`;
-  // Update card display
-  document.getElementById('dash-day-name').textContent = day + ' — ' + info.name;
-  document.getElementById('dash-day-detail').textContent = info.detail;
-  // Highlight selected
-  ['Вторник','Четверг','Суббота'].forEach(d => {
-    const el = document.getElementById('wpi-' + d);
-    if (el) el.classList.toggle('selected', d === day);
-  });
-  // Close dropdown
-  document.getElementById('wo-picker-dropdown').style.display = 'none';
-  document.getElementById('wo-picker-btn').classList.remove('wo-picker-open');
-  document.getElementById('wo-picker-arrow').style.transform = '';
-}
-
-// Close picker on outside click
-document.addEventListener('click', () => {
-  const dd = document.getElementById('wo-picker-dropdown');
-  if (dd) dd.style.display = 'none';
-  const btn = document.getElementById('wo-picker-btn');
-  if (btn) btn.classList.remove('wo-picker-open');
-  const arrow = document.getElementById('wo-picker-arrow');
-  if (arrow) arrow.style.transform = '';
-});
-
-// ═══════════════════════════════════════════════════════════
 //  WORKOUT INIT
 // ═══════════════════════════════════════════════════════════
-function startWorkout() {
+function _startWorkoutLegacy() {
   // Only called from Dashboard button — starts the timer
   if (WO.active) {
     // Already active — just navigate to workout screen
@@ -1034,9 +1152,7 @@ function startWorkout() {
     return;
   }
   // Prepare UI first (without side-effects on timer)
-  const plan = selectedWorkoutDay
-    ? { day: selectedWorkoutDay, ...PLAN_INFO[selectedWorkoutDay] }
-    : getTodayPlan();
+  const plan = getTodayPlan();
   const exList = getExercises().filter(e => e.day === plan.day).sort((a,b) => a.order - b.order);
   WO.sessionId = Date.now();
   WO.sets = {};
@@ -1195,7 +1311,7 @@ function fmtW(n) {
 // ═══════════════════════════════════════════════════════════
 //  ADD SET
 // ═══════════════════════════════════════════════════════════
-function addSet(exId) {
+function _addSetLegacy(exId) {
   ensureSessionId();
   const wInp = document.getElementById('w-' + exId);
   const rInp = document.getElementById('r-' + exId);
@@ -1688,6 +1804,441 @@ function showToast(title, msg) {
   document.getElementById('toast-m').textContent = msg;
   const t = document.getElementById('toast'); t.classList.add('show');
   toastTm = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+
+// ═══════════════════════════════════════════════════════════
+//  STORAGE KEYS EXTENSION
+// ═══════════════════════════════════════════════════════════
+K.custom  = 'mc_custom_plans';
+K.profile = 'mc_profile';       // { exId: workingWeight }
+
+// ─── Safe getters ───────────────────────────────────────────
+function getCustomPlans()          { return get(K.custom)  || []; }
+function saveCustomPlans(plans)    { set(K.custom, plans); }
+function getProfile()              { return get(K.profile) || {}; }
+function saveProfileData(profile)  { set(K.profile, profile); }
+
+// ─── All exercises: builtin + all custom ────────────────────
+function getAllExercises() {
+  const builtin = get(K.ex) || EXERCISES;
+  const customs  = getCustomPlans().flatMap(p =>
+    (p.exercises || []).map(e => ({ ...e, day: 'custom_' + p.id }))
+  );
+  return [...builtin, ...customs];
+}
+
+// ═══════════════════════════════════════════════════════════
+//  WORKOUT PICKER
+// ═══════════════════════════════════════════════════════════
+let selectedPlan = null; // {type:'builtin',day} | {type:'custom',id}
+
+function toggleWorkoutPicker(e) {
+  e.stopPropagation();
+  const dd  = document.getElementById('wo-picker-dropdown');
+  const btn = document.getElementById('wo-picker-btn');
+  const arr = document.getElementById('wo-picker-arrow');
+  const isOpen = dd.classList.contains('open');
+  if (!isOpen) {
+    refreshPickerCustomList();
+    const r = btn.getBoundingClientRect();
+    dd.style.top   = (r.bottom + 6) + 'px';
+    dd.style.left  = r.left + 'px';
+    dd.style.width = r.width + 'px';
+    dd.classList.add('open');
+    btn.classList.add('open');
+    arr.style.transform = 'rotate(180deg)';
+  } else {
+    closeWorkoutPicker();
+  }
+}
+function closeWorkoutPicker() {
+  const dd  = document.getElementById('wo-picker-dropdown');
+  const btn = document.getElementById('wo-picker-btn');
+  const arr = document.getElementById('wo-picker-arrow');
+  dd && dd.classList.remove('open');
+  btn && btn.classList.remove('open');
+  arr && (arr.style.transform = '');
+}
+function selectWorkout(plan) {
+  selectedPlan = plan;
+  let label, dayName, detail;
+  if (plan.type === 'builtin') {
+    const info = PLAN_INFO[plan.day];
+    label   = '✅ ' + info.name + ' — ' + plan.day;
+    dayName = plan.day + ' — ' + info.name;
+    detail  = info.detail;
+    ['Вторник','Четверг','Суббота'].forEach(d => {
+      const el = document.getElementById('wpi-' + d);
+      if (el) el.classList.toggle('selected', d === plan.day);
+    });
+  } else {
+    const cp = getCustomPlans().find(p => p.id === plan.id);
+    if (!cp) return;
+    label   = '✅ ' + cp.name;
+    dayName = cp.name;
+    detail  = cp.detail || (cp.exercises.length + ' упр.');
+  }
+  const lbl = document.getElementById('wo-picker-label');
+  if (lbl) lbl.textContent = label;
+  if (!document.getElementById('wo-picker-dropdown').classList.contains('open')) return closeWorkoutPicker();
+  closeWorkoutPicker();
+  // update card
+  const dn = document.getElementById('dash-day-name');
+  const dd2 = document.getElementById('dash-day-detail');
+  if (dn) dn.textContent = dayName;
+  if (dd2) dd2.textContent = detail;
+}
+function refreshPickerCustomList() {
+  const plans = getCustomPlans();
+  const div   = document.getElementById('custom-dd-divider');
+  const list  = document.getElementById('custom-dd-list');
+  if (!list) return;
+  if (!plans.length) { div.style.display = 'none'; list.innerHTML = ''; return; }
+  div.style.display = '';
+  list.innerHTML = plans.map(p => `
+    <button class="wo-pick-item ${selectedPlan&&selectedPlan.type==='custom'&&selectedPlan.id===p.id?'selected':''}"
+      onclick="selectWorkout({type:'custom',id:${p.id}})">
+      <div class="pi-name">${p.name}</div>
+      <div class="pi-detail">${p.detail||p.exercises.length+' упражнений'}</div>
+      <div class="pi-tag">МОЯ</div>
+    </button>`).join('');
+}
+document.addEventListener('click', () => closeWorkoutPicker());
+
+// ═══════════════════════════════════════════════════════════
+//  BUILDER
+// ═══════════════════════════════════════════════════════════
+let bBuilderExs  = [];    // new plan exercises
+let bEditExs     = [];    // edit mode exercises
+let bEditId      = null;  // null=no selection, 'builtin-Вторник', or custom plan id
+let bEditIsBuiltin = false;
+let bwState = { new: false, edit: false };
+
+function openBuilder(tab) {
+  bBuilderExs = [];
+  renderBuilderExList('new');
+  document.getElementById('b-plan-name').value  = '';
+  document.getElementById('b-plan-detail').value = '';
+  switchBuilderTab(tab || 'new');
+  document.getElementById('builder-overlay').classList.add('open');
+}
+function closeBuilder() {
+  document.getElementById('builder-overlay').classList.remove('open');
+  bEditId = null; bEditIsBuiltin = false;
+}
+function switchBuilderTab(tab) {
+  document.getElementById('builder-tab-new').style.display  = tab === 'new'  ? '' : 'none';
+  document.getElementById('builder-tab-edit').style.display = tab === 'edit' ? '' : 'none';
+  document.getElementById('btab-new').classList.toggle('active',  tab === 'new');
+  document.getElementById('btab-edit').classList.toggle('active', tab === 'edit');
+  if (tab === 'edit') { bEditId = null; bEditIsBuiltin = false; refreshBuilderPlansList(); document.getElementById('b-edit-section').style.display='none'; }
+}
+function toggleBW(mode) {
+  bwState[mode] = !bwState[mode];
+  const wrap = document.getElementById('bw-' + mode);
+  const dot  = document.getElementById('bwd-' + mode);
+  if (!wrap) return;
+  wrap.classList.toggle('on', bwState[mode]);
+  dot.textContent = bwState[mode] ? '✓' : '';
+  dot.style.color = bwState[mode] ? '#fff' : 'transparent';
+}
+function addExToBuilder(mode) {
+  const nameInp  = document.getElementById(mode==='new' ? 'b-ex-name'  : 'e-ex-name');
+  const groupInp = document.getElementById(mode==='new' ? 'b-ex-group' : 'e-ex-group');
+  const name  = nameInp.value.trim();
+  const group = groupInp.value.trim() || 'Мышцы';
+  if (!name) { showToast('⚠️ Введи название', ''); return; }
+  const arr = mode === 'new' ? bBuilderExs : bEditExs;
+  arr.push({ id: Date.now() + (Math.random()*999|0), name, group, target:'10–12', lw:0, lr:10, bw: bwState[mode], order: arr.length+1 });
+  nameInp.value = ''; groupInp.value = '';
+  renderBuilderExList(mode);
+}
+function removeBuilderEx(mode, idx) {
+  const arr = mode === 'new' ? bBuilderExs : bEditExs;
+  arr.splice(idx, 1);
+  arr.forEach((e,i) => e.order = i+1);
+  renderBuilderExList(mode);
+}
+function renderBuilderExList(mode) {
+  const arr    = mode === 'new' ? bBuilderExs : bEditExs;
+  const listEl = document.getElementById(mode==='new' ? 'b-ex-list'   : 'e-ex-list');
+  const emptyEl= document.getElementById(mode==='new' ? 'b-ex-empty'  : 'e-ex-empty');
+  if (!listEl) return;
+  if (emptyEl) emptyEl.style.display = arr.length ? 'none' : '';
+  listEl.innerHTML = arr.map((ex,i) => `
+    <div class="builder-ex-row">
+      <div class="ex-label">
+        <div class="ex-nm">${ex.name}${ex.bw?'<span class="ex-bw-badge">б/в</span>':''}</div>
+        <div class="ex-grp">${ex.group}</div>
+      </div>
+      <button class="btn-icon btn-danger" style="width:28px;height:28px;" onclick="removeBuilderEx('${mode}',${i})">
+        <svg class="ic ic-13" aria-hidden="true"><use href="#ic-trash"></use></svg>
+      </button>
+    </div>`).join('');
+}
+
+// ── New plan ──────────────────────────────────────────────
+function saveNewPlan() {
+  const name = document.getElementById('b-plan-name').value.trim();
+  if (!name) { showToast('⚠️ Укажи название', ''); return; }
+  if (!bBuilderExs.length) { showToast('⚠️ Добавь упражнения', ''); return; }
+  const detail = document.getElementById('b-plan-detail').value.trim();
+  const plans = getCustomPlans();
+  plans.push({ id: Date.now(), name, detail, exercises: [...bBuilderExs] });
+  saveCustomPlans(plans);
+  showToast('✅ Тренировка создана', name);
+  closeBuilder();
+  renderDashboard();
+}
+
+// ── Edit tab plan list ────────────────────────────────────
+function refreshBuilderPlansList() {
+  const customs  = getCustomPlans();
+  const builtins = [
+    { id:'builtin-Вторник', name:'Верх А', sub:'Грудь / Трицепс / Спина',       builtin:true, day:'Вторник' },
+    { id:'builtin-Четверг', name:'Ноги',   sub:'Квадры / Бицепс бедра / Бицепс', builtin:true, day:'Четверг' },
+    { id:'builtin-Суббота', name:'Плечи',  sub:'Плечи / Руки / Пресс',           builtin:true, day:'Суббота' },
+  ];
+  const container = document.getElementById('b-plans-list');
+  if (!container) return;
+
+  const allPlans = [...builtins, ...customs.map(p => ({ id:p.id, name:p.name, sub: p.detail||p.exercises.length+' упр.', builtin:false }))];
+
+  container.innerHTML = allPlans.map(p => `
+    <div class="plan-list-item ${bEditId===p.id ? 'selected-edit' : ''}" onclick="startEditPlan('${p.id}',${p.builtin},${p.builtin?'\''+p.day+'\'':'null'})">
+      <div style="flex:1;">
+        <div class="pli-name">${p.name} ${p.builtin?'<span style="font-size:9px;color:var(--text-dim);font-family:\'JetBrains Mono\',monospace;">[БАЗОВАЯ]</span>':''}</div>
+        <div class="pli-sub">${p.sub}</div>
+      </div>
+      <svg class="ic ic-15" style="color:var(--text-dim);flex-shrink:0;" aria-hidden="true"><use href="#ic-edit"></use></svg>
+    </div>`).join('');
+}
+function startEditPlan(id, isBuiltin, day) {
+  bEditId = id; bEditIsBuiltin = isBuiltin;
+  let exercises;
+  if (isBuiltin) {
+    const all = get(K.ex) || EXERCISES;
+    exercises = all.filter(e => e.day === day).sort((a,b) => a.order - b.order);
+    document.getElementById('b-editing-label').textContent = 'БАЗОВАЯ: ' + PLAN_INFO[day].name.toUpperCase();
+    document.getElementById('b-delete-btn').style.display = 'none';
+  } else {
+    const plans = getCustomPlans();
+    const plan = plans.find(p => p.id == id);
+    if (!plan) return;
+    exercises = plan.exercises.map(e => ({...e}));
+    document.getElementById('b-editing-label').textContent = plan.name.toUpperCase();
+    document.getElementById('b-delete-btn').style.display = '';
+  }
+  bEditExs = exercises.map(e => ({...e}));
+  bwState.edit = false;
+  const bwEl = document.getElementById('bw-edit'); if(bwEl) bwEl.classList.remove('on');
+  const dotEl = document.getElementById('bwd-edit'); if(dotEl){dotEl.textContent='';dotEl.style.color='transparent';}
+  document.getElementById('e-ex-name').value  = '';
+  document.getElementById('e-ex-group').value = '';
+  renderBuilderExList('edit');
+  document.getElementById('b-edit-section').style.display = '';
+  refreshBuilderPlansList();
+}
+function saveEditPlan() {
+  if (!bEditId) return;
+  if (bEditIsBuiltin) {
+    // Save modified builtin exercises
+    const day = bEditId.replace('builtin-', '');
+    const allEx = get(K.ex) || EXERCISES;
+    const others = allEx.filter(e => e.day !== day);
+    const updated = bEditExs.map((e,i) => ({ ...e, day, order: i+1 }));
+    set(K.ex, [...others, ...updated]);
+    showToast('✅ Сохранено', 'Базовая тренировка обновлена');
+  } else {
+    if (!bEditExs.length) { showToast('⚠️ Добавь упражнения',''); return; }
+    const plans = getCustomPlans();
+    const idx = plans.findIndex(p => p.id == bEditId);
+    if (idx < 0) return;
+    plans[idx].exercises = [...bEditExs];
+    saveCustomPlans(plans);
+    showToast('✅ Сохранено', 'Тренировка обновлена');
+  }
+  if (selectedPlan) {
+    // Re-sync picker label
+    if (selectedPlan.type==='custom' && selectedPlan.id===bEditId) selectWorkout(selectedPlan);
+    if (selectedPlan.type==='builtin') {
+      const info = PLAN_INFO[selectedPlan.day];
+      document.getElementById('dash-day-name').textContent = selectedPlan.day + ' — ' + info.name;
+    }
+  }
+  refreshBuilderPlansList();
+  renderDashboard();
+}
+function deleteEditingPlan() {
+  if (!bEditId || bEditIsBuiltin) return;
+  const plans = getCustomPlans().filter(p => p.id != bEditId);
+  saveCustomPlans(plans);
+  if (selectedPlan && selectedPlan.type==='custom' && selectedPlan.id===bEditId) {
+    selectedPlan = null;
+    const lbl = document.getElementById('wo-picker-label');
+    if (lbl) lbl.textContent = '📋 Выбрать тренировку';
+    renderDashboard();
+  }
+  bEditId = null; bEditIsBuiltin = false;
+  document.getElementById('b-edit-section').style.display = 'none';
+  refreshBuilderPlansList();
+  showToast('🗑️ Удалено', 'Тренировка удалена');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PROFILE
+// ═══════════════════════════════════════════════════════════
+function openProfile() {
+  renderProfileList();
+  document.getElementById('profile-overlay').classList.add('open');
+}
+function closeProfile() {
+  document.getElementById('profile-overlay').classList.remove('open');
+}
+function renderProfileList() {
+  const allEx   = getAllExercises();
+  const profile = getProfile();
+  const container = document.getElementById('profile-ex-list');
+  if (!container) return;
+  container.innerHTML = allEx.map(ex => `
+    <div class="profile-ex-row">
+      <div class="pex-label">
+        <div class="pex-name">${ex.name}${ex.bw?'<span class="ex-bw-badge">б/в</span>':''}</div>
+        <div class="pex-group">${ex.group || ''}</div>
+      </div>
+      <div style="text-align:center;">
+        <input class="pex-inp" type="number" step="0.25" min="0" id="pex-${ex.id}"
+          value="${profile[ex.id] !== undefined ? profile[ex.id] : (ex.lw || 0)}"
+          placeholder="0">
+        <div class="pex-lbl">кг</div>
+      </div>
+    </div>`).join('');
+}
+function saveProfile() {
+  const allEx   = getAllExercises();
+  const profile = getProfile();
+  allEx.forEach(ex => {
+    const inp = document.getElementById('pex-' + ex.id);
+    if (inp) profile[ex.id] = parseFloat(inp.value) || 0;
+  });
+  saveProfileData(profile);
+  // Also sync lw in exercises so PR detection uses profile weight
+  const builtinEx = get(K.ex) || EXERCISES;
+  builtinEx.forEach(ex => { if (profile[ex.id] !== undefined) ex.lw = profile[ex.id]; });
+  set(K.ex, builtinEx);
+  // Sync custom plans
+  const customs = getCustomPlans();
+  customs.forEach(plan => {
+    plan.exercises.forEach(ex => { if (profile[ex.id] !== undefined) ex.lw = profile[ex.id]; });
+  });
+  saveCustomPlans(customs);
+  closeProfile();
+  showToast('✅ Профиль сохранён', 'Рабочие веса обновлены');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PATCH: startWorkout — use selectedPlan
+// ═══════════════════════════════════════════════════════════
+const _origStartWorkout = startWorkout;
+function startWorkout() {
+  if (WO.active) { switchScreen('workout'); return; }
+
+  let plan;
+  if (selectedPlan) {
+    if (selectedPlan.type === 'custom') {
+      const cp = getCustomPlans().find(p => p.id === selectedPlan.id);
+      if (cp) plan = { day: 'custom_' + cp.id, name: cp.name, detail: cp.detail || '' };
+    } else if (selectedPlan.type === 'builtin') {
+      plan = { day: selectedPlan.day, ...PLAN_INFO[selectedPlan.day] };
+    }
+  }
+  if (!plan) plan = getTodayPlan();
+
+  // Build exercise list for this plan
+  let exList;
+  if (plan.day.startsWith('custom_')) {
+    const cpId = parseInt(plan.day.replace('custom_', ''));
+    const cp = getCustomPlans().find(p => p.id === cpId);
+    exList = cp ? cp.exercises.map((e,i) => ({ ...e, day: plan.day, order: i+1 })) : [];
+  } else {
+    exList = (get(K.ex) || EXERCISES).filter(e => e.day === plan.day).sort((a,b) => a.order - b.order);
+  }
+
+  WO.sessionId = Date.now();
+  WO.sets      = {};
+  WO.timerSec  = 0;
+  WO.plan      = plan;
+  WO.exList    = exList;
+  WO.cardio    = false;
+  exList.forEach(e => { WO.sets[e.id] = []; });
+
+  document.getElementById('wo-header-name').textContent = plan.name.toUpperCase();
+  document.getElementById('wo-header-sub').textContent  = plan.detail;
+  document.getElementById('wo-timer').textContent = '00:00';
+  const cardioRow = document.getElementById('cardio-toggle');
+  if (cardioRow) cardioRow.classList.remove('done');
+
+  renderExercises(exList);
+  updateProgress();
+
+  WO.active = true;
+  renderWorkoutState();
+  if (WO.timer) clearInterval(WO.timer);
+  WO.timer = setInterval(tickTimer, 1000);
+  switchScreen('workout');
+}
+
+// ── Patch addSet to use profile weight for PR detection ──
+const _origAddSet = addSet;
+function addSet(exId) {
+  ensureSessionId();
+  const wInp = document.getElementById('w-' + exId);
+  const rInp = document.getElementById('r-' + exId);
+  const w = parseFloat(wInp.value) || 0;
+  const r = parseInt(rInp.value)   || 0;
+  if (!r) { showToast('⚠️ Введи повторения', ''); return; }
+
+  const allEx  = getAllExercises();
+  const ex     = allEx.find(e => e.id === exId);
+  const profile = getProfile();
+  const workingW = profile[exId] !== undefined ? profile[exId] : (ex ? (ex.lw || 0) : 0);
+  const isPR   = w > workingW && w > 0;
+  const delta  = isPR ? Math.round((w - workingW) * 100) / 100 : 0;
+
+  if (!WO.sets[exId]) WO.sets[exId] = [];
+  WO.sets[exId].push({ w, r, pr: isPR, delta, bw: ex?.bw });
+
+  renderSetChips(exId);
+  updateProgress();
+
+  const card = document.getElementById('ex-' + exId);
+  if (card) {
+    card.classList.add('has-sets');
+    card.style.transition = 'background 0.3s';
+    card.style.background = 'rgba(16,185,129,0.06)';
+    setTimeout(() => { card.style.background = ''; }, 500);
+  }
+  if (isPR) showToast('🔥 Новый рекорд!', (ex ? ex.name : '') + ': ' + w + 'кг × ' + r);
+}
+
+// ── Patch renderDashboard to not overwrite picker selection ──
+const _origRenderDashboard = renderDashboard;
+function renderDashboard() {
+  _renderDashboardOrig();
+  if (selectedPlan) {
+    if (selectedPlan.type === 'builtin') {
+      const info = PLAN_INFO[selectedPlan.day];
+      document.getElementById('dash-day-name').textContent = selectedPlan.day + ' — ' + info.name;
+      document.getElementById('dash-day-detail').textContent = info.detail;
+    } else {
+      const cp = getCustomPlans().find(p => p.id === selectedPlan.id);
+      if (cp) {
+        document.getElementById('dash-day-name').textContent = cp.name;
+        document.getElementById('dash-day-detail').textContent = cp.detail || cp.exercises.length + ' упр.';
+      }
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
