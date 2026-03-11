@@ -499,6 +499,77 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
   display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; font-size:20px;
 }
 .btn-header-profile:hover { background:var(--bg-hover); color:var(--text-primary); }
+
+/* ── PROFILE USER STATS ── */
+.profile-stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+.pstat-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:13px; padding:14px 16px;
+  position:relative; overflow:hidden;
+}
+.pstat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(245,158,11,0.3),transparent); }
+.pstat-lbl {
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--text-muted); font-family:'JetBrains Mono',monospace; margin-bottom:8px;
+}
+.pstat-row { display:flex; align-items:baseline; gap:4px; }
+.pstat-inp {
+  flex:1; min-width:0; background:none; border:none; outline:none;
+  color:var(--text-primary); font-family:'Bebas Neue',sans-serif; font-size:28px;
+  letter-spacing:1px; width:100%;
+}
+.pstat-inp::placeholder { color:var(--text-dim); }
+.pstat-unit { font-size:12px; color:var(--amber); font-family:'JetBrains Mono',monospace; font-weight:700; flex-shrink:0; }
+
+/* ── ACHIEVEMENT FILTER TABS ── */
+.ach-filter-row { display:flex; flex-wrap:wrap; gap:6px; padding-bottom:12px; }
+.ach-filter-btn {
+  flex-shrink:0; padding:7px 14px; border-radius:20px;
+  border:1px solid var(--border-faint); background:var(--bg-surface);
+  color:var(--text-muted); font-size:11px; font-weight:700; cursor:pointer;
+  transition:all 0.2s; white-space:nowrap; font-family:'DM Sans',sans-serif;
+  display:flex; align-items:center; gap:5px;
+}
+.ach-filter-btn:hover { background:var(--bg-hover); color:var(--text-primary); }
+.ach-filter-btn.active { background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.38); color:var(--amber); }
+.ach-filter-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── ACHIEVEMENT TIERS ── */
+.ach-card.tier-1 { border-color:rgba(16,185,129,0.18); }
+.ach-card.tier-1.unlocked { border-color:rgba(16,185,129,0.5); background:linear-gradient(135deg,rgba(16,185,129,0.07),var(--bg-card)); }
+.ach-card.tier-1.unlocked::before { background:linear-gradient(90deg,transparent,var(--green),transparent); }
+.ach-card.tier-2 { border-color:rgba(59,130,246,0.18); }
+.ach-card.tier-2.unlocked { border-color:rgba(59,130,246,0.5); background:linear-gradient(135deg,rgba(59,130,246,0.07),var(--bg-card)); }
+.ach-card.tier-2.unlocked::before { background:linear-gradient(90deg,transparent,var(--blue),transparent); }
+.ach-card.tier-3 { border-color:rgba(245,158,11,0.18); }
+.ach-card.tier-3.unlocked { border-color:rgba(245,158,11,0.5); background:linear-gradient(135deg,rgba(245,158,11,0.07),var(--bg-card)); }
+.ach-card.tier-4 { border-color:rgba(239,68,68,0.18); }
+.ach-card.tier-4.unlocked { border-color:rgba(239,68,68,0.5); background:linear-gradient(135deg,rgba(239,68,68,0.07),var(--bg-card)); }
+.ach-card.tier-4.unlocked::before { background:linear-gradient(90deg,transparent,var(--red),transparent); }
+.ach-card.tier-5 { border-color:rgba(168,85,247,0.18); }
+.ach-card.tier-5.unlocked { border-color:rgba(168,85,247,0.6); background:linear-gradient(135deg,rgba(168,85,247,0.1),var(--bg-card)); box-shadow:0 0 22px rgba(168,85,247,0.1); }
+.ach-card.tier-5.unlocked::before { background:linear-gradient(90deg,transparent,rgba(168,85,247,0.7),transparent); }
+.tier-badge {
+  display:inline-flex; align-items:center; gap:3px;
+  font-size:8px; font-family:'JetBrains Mono',monospace; font-weight:700;
+  padding:2px 6px; border-radius:6px; margin-bottom:4px; letter-spacing:1px;
+  text-transform:uppercase;
+}
+.tier-1 .tier-badge { background:rgba(16,185,129,0.12); color:var(--green); }
+.tier-2 .tier-badge { background:rgba(59,130,246,0.12); color:var(--blue); }
+.tier-3 .tier-badge { background:rgba(245,158,11,0.12); color:var(--amber); }
+.tier-4 .tier-badge { background:rgba(239,68,68,0.12); color:var(--red); }
+.tier-5 .tier-badge { background:rgba(168,85,247,0.12); color:#a855f7; }
+
+/* ── DRAG REORDER ── */
+.builder-ex-row { cursor:grab; user-select:none; }
+.builder-ex-row:active { cursor:grabbing; }
+.builder-ex-row.drag-over { border-color:rgba(245,158,11,0.6); background:rgba(245,158,11,0.07); }
+.builder-ex-row.dragging { opacity:0.4; }
+.drag-handle {
+  color:var(--text-dim); cursor:grab; display:flex; align-items:center;
+  padding:0 2px; flex-shrink:0; transition:color 0.15s;
+}
+.drag-handle:hover { color:var(--text-muted); }
 </style>
 </head>
 <body>
@@ -703,6 +774,7 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
     </button>
   </div>
   <div class="px" style="padding-top:12px;">
+    <div class="ach-filter-row" id="ach-filters"></div>
     <div class="ach-grid" id="ach-grid"></div>
   </div>
 </div>
@@ -806,7 +878,41 @@ body { background: #000; display: flex; justify-content: center; font-family: 'D
       <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text-primary);">ПРОФИЛЬ</div>
       <button class="btn-icon" onclick="closeProfile()"><svg class="ic ic-15" aria-hidden="true"><use href="#ic-x"></use></svg></button>
     </div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Укажи свой <strong style="color:var(--amber);">рабочий вес</strong> для каждого упражнения. Рекорд (PR) засчитывается когда ты превышаешь этот вес.</div>
+    <!-- User stats -->
+    <div class="sec-title" style="margin-bottom:12px;">Данные атлета</div>
+    <div class="profile-stats-grid">
+      <div class="pstat-card">
+        <div class="pstat-lbl">Вес тела</div>
+        <div class="pstat-row">
+          <input class="pstat-inp" type="number" id="p-bodyweight" placeholder="80" min="30" max="300" step="0.5">
+          <span class="pstat-unit">кг</span>
+        </div>
+      </div>
+      <div class="pstat-card">
+        <div class="pstat-lbl">Рост</div>
+        <div class="pstat-row">
+          <input class="pstat-inp" type="number" id="p-height" placeholder="175" min="100" max="250" step="1">
+          <span class="pstat-unit">см</span>
+        </div>
+      </div>
+      <div class="pstat-card">
+        <div class="pstat-lbl">Возраст</div>
+        <div class="pstat-row">
+          <input class="pstat-inp" type="number" id="p-age" placeholder="25" min="10" max="99" step="1">
+          <span class="pstat-unit">лет</span>
+        </div>
+      </div>
+      <div class="pstat-card">
+        <div class="pstat-lbl">Стаж</div>
+        <div class="pstat-row">
+          <input class="pstat-inp" type="number" id="p-exp" placeholder="1" min="0" max="50" step="0.5">
+          <span class="pstat-unit">лет</span>
+        </div>
+      </div>
+    </div>
+    <!-- Working weights -->
+    <div class="sec-title" style="margin-bottom:8px;">Рабочие веса</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;line-height:1.5;">Рекорд (🔥 PR) засчитывается когда превышаешь рабочий вес. Ачивки рассчитываются от этих данных.</div>
     <div id="profile-ex-list"></div>
     <button class="btn-primary" style="margin-top:8px;" onclick="saveProfile()"><svg class="ic ic-16" aria-hidden="true"><use href="#ic-save"></use></svg> СОХРАНИТЬ ПРОФИЛЬ</button>
   </div>
@@ -954,16 +1060,152 @@ const PLAN_INFO = {
 const WEEKDAY_RU = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
 const DAY_OF_WEEK = { 2:'Вторник', 4:'Четверг', 6:'Суббота' };
 
-const ACHIEVEMENTS = [
-  { id:'first',    e:'🎯', t:'Первый шаг',   d:'Первая тренировка',          c:'sessions_1'   },
-  { id:'pw80',     e:'🏋️', t:'Жимовик',      d:'Вес > 80кг в любом подходе', c:'weight_80'    },
-  { id:'pw100',    e:'🚀', t:'Центнер',      d:'Вес ≥ 100кг',                c:'weight_100'   },
-  { id:'ton1000',  e:'⚡', t:'Тоннаж',       d:'Тоннаж ≥ 1000кг за трен.',   c:'tonnage_1000' },
-  { id:'str3',     e:'🔥', t:'Серия ×3',     d:'3 тренировки подряд',         c:'streak_3'     },
-  { id:'str7',     e:'💎', t:'Железная воля',d:'7 тренировок подряд',         c:'streak_7'     },
-  { id:'sess5',    e:'⭐', t:'Регуляр',       d:'5 тренировок',               c:'sessions_5'   },
-  { id:'sess20',   e:'🏆', t:'Ветеран',       d:'20 тренировок',              c:'sessions_20'  },
+// ── STATIC ACHIEVEMENTS (misc, general) ─────────────────────
+// c types: sessions_N | streak_N | tonnage_N | total_ton_N | prs_N | cardio_N
+//          maxW_N | session_dur_min_N | all_done | diff_days_N | bw_ratio_EXID_N
+// tier: 1=very easy, 2=easy, 3=medium, 4=hard, 5=legendary
+const ACHIEVEMENTS_STATIC = [
+  // ── СЕССИИ ──────────────────────────────────────────────
+  { id:'sess1',    tier:1, e:'🎯', t:'Первый шаг',     d:'Завершил первую тренировку',        c:'sessions_1'   },
+  { id:'sess5',    tier:1, e:'⭐', t:'Регуляр',         d:'5 тренировок',                      c:'sessions_5'   },
+  { id:'sess10',   tier:2, e:'🏅', t:'Десятка',         d:'10 тренировок',                     c:'sessions_10'  },
+  { id:'sess25',   tier:2, e:'💪', t:'Уверенный старт', d:'25 тренировок',                     c:'sessions_25'  },
+  { id:'sess50',   tier:3, e:'🔥', t:'Полтинник',       d:'50 тренировок',                     c:'sessions_50'  },
+  { id:'sess100',  tier:4, e:'💎', t:'Ветеран',          d:'100 тренировок',                    c:'sessions_100' },
+  { id:'sess200',  tier:5, e:'👑', t:'Легенда',          d:'200 тренировок',                    c:'sessions_200' },
+  // ── СЕРИИ ───────────────────────────────────────────────
+  { id:'str2',     tier:1, e:'✌️', t:'Два подряд',      d:'2 тренировки подряд',               c:'streak_2'     },
+  { id:'str3',     tier:1, e:'🔥', t:'Серия ×3',        d:'3 тренировки подряд',               c:'streak_3'     },
+  { id:'str5',     tier:2, e:'💥', t:'Пятёрка',         d:'5 тренировок подряд',               c:'streak_5'     },
+  { id:'str7',     tier:3, e:'💎', t:'Железная воля',   d:'7 тренировок подряд',               c:'streak_7'     },
+  { id:'str14',    tier:4, e:'🌟', t:'Две недели',       d:'14 тренировок подряд',              c:'streak_14'    },
+  { id:'str30',    tier:5, e:'🚀', t:'Месяц без отдыха',d:'30 тренировок подряд',              c:'streak_30'    },
+  // ── ТОННАЖ ЗА СЕССИЮ ────────────────────────────────────
+  { id:'ton500',   tier:1, e:'📦', t:'500 кг за раз',   d:'Тоннаж ≥ 500 кг за тренировку',    c:'tonnage_500'  },
+  { id:'ton1000',  tier:2, e:'⚡', t:'Тонна',            d:'Тоннаж ≥ 1000 кг за тренировку',   c:'tonnage_1000' },
+  { id:'ton2000',  tier:3, e:'💥', t:'Две тонны',        d:'Тоннаж ≥ 2000 кг за тренировку',   c:'tonnage_2000' },
+  { id:'ton5000',  tier:4, e:'🔱', t:'Пять тонн',        d:'Тоннаж ≥ 5000 кг за тренировку',   c:'tonnage_5000' },
+  { id:'ton10000', tier:5, e:'🏗️', t:'Десять тонн',      d:'Тоннаж ≥ 10000 кг за тренировку',  c:'tonnage_10000'},
+  // ── СУММАРНЫЙ ТОННАЖ ─────────────────────────────────────
+  { id:'tton5',    tier:1, e:'🧱', t:'5 тонн суммарно',  d:'Суммарный тоннаж ≥ 5 000 кг',      c:'total_ton_5000'  },
+  { id:'tton20',   tier:2, e:'🏛️', t:'20 тонн суммарно', d:'Суммарный тоннаж ≥ 20 000 кг',     c:'total_ton_20000' },
+  { id:'tton100',  tier:3, e:'⛰️', t:'100 тонн суммарно',d:'Суммарный тоннаж ≥ 100 000 кг',    c:'total_ton_100000'},
+  { id:'tton500',  tier:4, e:'🌋', t:'500 тонн суммарно',d:'Суммарный тоннаж ≥ 500 000 кг',    c:'total_ton_500000'},
+  { id:'tton1000', tier:5, e:'🌍', t:'Килотонна',         d:'Суммарный тоннаж ≥ 1 000 000 кг',  c:'total_ton_1000000'},
+  // ── РЕКОРДЫ ─────────────────────────────────────────────
+  { id:'pr1',      tier:1, e:'🎉', t:'Первый рекорд',    d:'Установил 1 персональный рекорд',   c:'prs_1'        },
+  { id:'pr5',      tier:1, e:'🏹', t:'Снайпер',          d:'5 персональных рекордов',           c:'prs_5'        },
+  { id:'pr15',     tier:2, e:'🎯', t:'В ударе',           d:'15 персональных рекордов',          c:'prs_15'       },
+  { id:'pr30',     tier:3, e:'💪', t:'PR-машина',         d:'30 персональных рекордов',          c:'prs_30'       },
+  { id:'pr75',     tier:4, e:'🔥', t:'Неудержимый',       d:'75 персональных рекордов',          c:'prs_75'       },
+  { id:'pr150',    tier:5, e:'👑', t:'Господин рекордов', d:'150 персональных рекордов',         c:'prs_150'      },
+  // ── КАРДИО ──────────────────────────────────────────────
+  { id:'car1',     tier:1, e:'🚶', t:'Первый шаг',        d:'Первое кардио',                     c:'cardio_1'     },
+  { id:'car5',     tier:1, e:'🏃', t:'Бегун',              d:'5 кардио-сессий',                   c:'cardio_5'     },
+  { id:'car15',    tier:2, e:'🚴', t:'Выносливый',          d:'15 кардио-сессий',                  c:'cardio_15'    },
+  { id:'car30',    tier:3, e:'🏆', t:'Кардио-монстр',       d:'30 кардио-сессий',                  c:'cardio_30'    },
+  { id:'car60',    tier:4, e:'❤️', t:'Железное сердце',    d:'60 кардио-сессий',                  c:'cardio_60'    },
+  // ── ВРЕМЯ СЕССИЙ ────────────────────────────────────────
+  { id:'dur30',    tier:2, e:'⚡', t:'Молния',              d:'Тренировка до 30 минут',            c:'dur_max_30'   },
+  { id:'dur90',    tier:2, e:'🕐', t:'Марафон',             d:'Тренировка дольше 90 минут',        c:'dur_min_90'   },
+  { id:'dur120',   tier:3, e:'🌙', t:'Ночная смена',        d:'Тренировка дольше 2 часов',         c:'dur_min_120'  },
+  // ── ВСЕ УПРАЖНЕНИЯ ──────────────────────────────────────
+  { id:'allex',    tier:2, e:'🎭', t:'Полная выкладка',    d:'Сделал все упражнения тренировки',  c:'all_done'     },
+  // ── РАЗНЫЕ ДНИ ──────────────────────────────────────────
+  { id:'days3',    tier:2, e:'📅', t:'Три дня',             d:'Тренировался в 3 разных дня недели',c:'diff_days_3'  },
+  { id:'days7',    tier:4, e:'🗓️', t:'Полная неделя',       d:'Тренировался все 7 дней недели',   c:'diff_days_7'  },
 ];
+
+// ── EXERCISE-SPECIFIC ACHIEVEMENT TEMPLATES ───────────────
+// Generated dynamically in generateExerciseAchievements()
+// Each exercise gets 5 tiers: 0.7×, 1×, 1.2×, 1.5×, 2× of working weight
+// For BW exercises: 10, 15, 20, 30, 50 reps
+const EX_TIER_TEMPLATES = [
+  { tier:1, suffix:'_t1', eW:'🌱', eB:'🌱', lW:'70% рабочего', lB:'10 повторений',  mW:0.70, mB:10,  desc:'w:Поднял {p}% рабочего веса | b:{r} повторений подряд' },
+  { tier:2, suffix:'_t2', eW:'💪', eB:'💪', lW:'Рабочий вес',   lB:'15 повторений',  mW:1.00, mB:15,  desc:'w:Поднял рабочий вес {w}кг | b:{r} повторений подряд' },
+  { tier:3, suffix:'_t3', eW:'🔥', eB:'🔥', lW:'+20% сверху',   lB:'20 повторений',  mW:1.20, mB:20,  desc:'w:Превысил рабочий вес на 20% ({w}кг) | b:{r} повторений подряд' },
+  { tier:4, suffix:'_t4', eW:'⚡', eB:'⚡', lW:'+50% сверху',   lB:'30 повторений',  mW:1.50, mB:30,  desc:'w:Поднял {w}кг (+50% к рабочему) | b:{r} повторений подряд' },
+  { tier:5, suffix:'_t5', eW:'👑', eB:'👑', lW:'Двойной вес',   lB:'50 повторений',  mW:2.00, mB:50,  desc:'w:Двойной рабочий вес: {w}кг! | b:{r} повторений' },
+];
+
+// ── BODY RATIO ACHIEVEMENTS (based on bodyweight) ─────────
+// Generated dynamically in generateBodyRatioAchievements()
+const BODY_RATIO_TEMPLATES = [
+  { tier:2, e:'🏋️', tpl:'Вес тела в {name}',         d:'Поднял {name} = свой вес тела',     ratio:1.0 },
+  { tier:3, e:'💪', tpl:'1.5× в {name}',              d:'{name} ≥ 1.5× веса тела',           ratio:1.5 },
+  { tier:4, e:'🔱', tpl:'2× в {name}',                d:'{name} ≥ 2× веса тела',             ratio:2.0 },
+  { tier:5, e:'👑', tpl:'2.5× в {name}',              d:'{name} ≥ 2.5× веса тела',           ratio:2.5 },
+];
+// Which builtin exercises can have body ratio achievements
+const BODY_RATIO_EX_IDS = [1,2,3,6,7,8,9,11]; // press, rows, legs, etc.
+
+function generateAllAchievements() {
+  const profile  = getProfile();
+  const allEx    = getAllExercises();
+  const achs     = [...ACHIEVEMENTS_STATIC];
+
+  // Exercise achievements
+  allEx.forEach(ex => {
+    const workW = profile[ex.id] !== undefined ? profile[ex.id] : (ex.lw || 0);
+    EX_TIER_TEMPLATES.forEach(tmpl => {
+      const id = 'ex_' + ex.id + tmpl.suffix;
+      if (ex.bw) {
+        // Bodyweight exercise → rep-based
+        achs.push({
+          id, tier: tmpl.tier, e: tmpl.eB,
+          t: ex.name.split(' ').slice(0,3).join(' ') + ' × ' + tmpl.mB,
+          d: ex.name + ': ' + tmpl.mB + ' повторений',
+          c: 'ex_reps', ceid: ex.id, cv: tmpl.mB,
+        });
+      } else if (workW > 0) {
+        const target = Math.round(workW * tmpl.mW * 4) / 4;
+        const pct = Math.round(tmpl.mW * 100);
+        achs.push({
+          id, tier: tmpl.tier, e: tmpl.eW,
+          t: ex.name.split(' ').slice(0,3).join(' ') + ' ' + target + 'кг',
+          d: ex.name + ': ' + target + 'кг (' + pct + '% рабочего)',
+          c: 'ex_weight', ceid: ex.id, cv: target,
+        });
+      }
+    });
+  });
+
+  // Body ratio achievements
+  const bw = parseFloat(profile.bodyWeight) || 0;
+  if (bw > 0) {
+    BODY_RATIO_EX_IDS.forEach(eid => {
+      const ex = allEx.find(e => e.id === eid);
+      if (!ex || ex.bw) return;
+      BODY_RATIO_TEMPLATES.forEach((t,i) => {
+        const target = Math.round(bw * t.ratio * 4) / 4;
+        achs.push({
+          id: 'bwr_' + eid + '_' + i,
+          tier: t.tier, e: t.e,
+          t: t.tpl.replace('{name}', ex.name.split(' ')[0]),
+          d: t.d.replace('{name}', ex.name) + ' (' + target + 'кг)',
+          c: 'ex_weight', ceid: eid, cv: target,
+        });
+      });
+    });
+  }
+
+  return achs;
+}
+
+// ── Merge static + dynamic, preserving unlocked state ────
+function rebuildAchievements() {
+  const generated = generateAllAchievements();
+  const stored    = get(K.achs) || [];
+  const storedMap = {};
+  stored.forEach(a => { storedMap[a.id] = a; });
+  const merged = generated.map(a => ({
+    ...a,
+    unlocked: storedMap[a.id] ? storedMap[a.id].unlocked : false,
+    date:     storedMap[a.id] ? storedMap[a.id].date     : null,
+  }));
+  set(K.achs, merged);
+  return merged;
+}
 
 // ═══════════════════════════════════════════════════════════
 //  INIT
@@ -982,7 +1224,7 @@ function initDB() {
     set(K.cfg, { version: DB_VERSION });
   }
 
-  if (!get(K.achs))  set(K.achs,  ACHIEVEMENTS.map(a => ({...a, unlocked:false, date:null})));
+  rebuildAchievements(); // always rebuild to pick up profile changes
   if (!get(K.sess))  set(K.sess,  []);
   if (!get(K.sets))  set(K.sets,  []);
 }
@@ -1092,7 +1334,7 @@ function _renderDashboardOrig() {
   }
 
   // Mini achievements
-  const achs = get(K.achs) || [];
+  const achs = (get(K.achs) || []).filter(a => a.tier >= 3 || a.unlocked).slice(0,20);
   document.getElementById('dash-ribbon').innerHTML = achs.map(a =>
     `<div class="ach-mini ${a.unlocked?'unlocked':''}" title="${a.t}">${a.e}${a.unlocked?'<div class="dot"></div>':''}</div>`
   ).join('');
@@ -1441,7 +1683,7 @@ function finishWorkout() {
   set(K.sess, sessions);
 
   // Check achievements
-  const newAchs = checkAchievements(sessions, maxW, tonnage);
+  const newAchs = checkAchievements(sessions, maxW, tonnage, finalSets, elapsed);
 
   // Build copy text
   const copyText = buildCopyText(session, finalSets, exList);
@@ -1543,24 +1785,69 @@ function closeFinishModal() {
 // ═══════════════════════════════════════════════════════════
 //  ACHIEVEMENTS
 // ═══════════════════════════════════════════════════════════
-function checkAchievements(sessions, maxW, tonnage) {
-  const achs = get(K.achs) || [];
+function checkAchievements(sessions, maxW, tonnage, finishedSets, elapsed) {
+  const achs    = get(K.achs) || [];
   const newOnes = [];
-  const streak = calcStreak(sessions);
-  const today = new Date().toLocaleDateString('ru-RU');
+  const streak  = calcStreak(sessions);
+  const today   = new Date().toLocaleDateString('ru-RU');
+  const allSets = get(K.sets) || [];
+  const totalTon = allSets.reduce((a,s) => a + s.w * s.r, 0);
+  const prTotal  = allSets.filter(s => s.pr).length;
+  const cardioN  = sessions.filter(s => s.cardio).length;
+  const diffDays = new Set(sessions.map(s => new Date(s.date).getDay())).size;
+
+  // Per-exercise max weights/reps this session
+  const exMaxW = {}; // exId → max weight this session
+  const exMaxR = {}; // exId → max reps this session (for bw)
+  (finishedSets || []).forEach(s => {
+    if (!exMaxW[s.eid] || s.w > exMaxW[s.eid]) exMaxW[s.eid] = s.w;
+    if (!exMaxR[s.eid] || s.r > exMaxR[s.eid]) exMaxR[s.eid] = s.r;
+  });
+
+  // All sessions for this workout
+  const allExSets = allSets; // full history
+  const exAllMaxW = {};
+  const exAllMaxR = {};
+  allExSets.forEach(s => {
+    if (!exAllMaxW[s.eid] || s.w > exAllMaxW[s.eid]) exAllMaxW[s.eid] = s.w;
+    if (!exAllMaxR[s.eid] || s.r > exAllMaxR[s.eid]) exAllMaxR[s.eid] = s.r;
+  });
+
+  const durMin = Math.floor((elapsed || 0) / 60);
 
   achs.forEach(a => {
     if (a.unlocked) return;
     let ok = false;
-    switch(a.c) {
-      case 'sessions_1':   ok = sessions.length >= 1; break;
-      case 'weight_80':    ok = maxW > 80; break;
-      case 'weight_100':   ok = maxW >= 100; break;
-      case 'tonnage_1000': ok = tonnage >= 1000; break;
-      case 'streak_3':     ok = streak >= 3; break;
-      case 'streak_7':     ok = streak >= 7; break;
-      case 'sessions_5':   ok = sessions.length >= 5; break;
-      case 'sessions_20':  ok = sessions.length >= 20; break;
+    const n = parseInt((a.c || '').split('_').pop()) || 0;
+    switch(true) {
+      // session counts
+      case /^sessions_/.test(a.c):       ok = sessions.length >= n; break;
+      // streaks
+      case /^streak_/.test(a.c):         ok = streak >= n; break;
+      // single session tonnage
+      case /^tonnage_/.test(a.c):        ok = tonnage >= n; break;
+      // cumulative tonnage
+      case /^total_ton_/.test(a.c):      ok = totalTon >= parseInt(a.c.split('_')[2]); break;
+      // PR counts
+      case /^prs_/.test(a.c):            ok = prTotal >= n; break;
+      // cardio
+      case /^cardio_/.test(a.c):         ok = cardioN >= n; break;
+      // duration min/max
+      case a.c === 'dur_max_30':         ok = durMin > 0 && durMin <= 30; break;
+      case /^dur_min_/.test(a.c):        ok = durMin >= parseInt(a.c.split('_')[2]); break;
+      // all exercises done
+      case a.c === 'all_done': {
+        const wo = WO.exList || [];
+        const doneIds = Object.keys(WO.sets || {}).filter(id => (WO.sets[id]||[]).length > 0);
+        ok = wo.length > 0 && doneIds.length >= wo.length;
+        break;
+      }
+      // different days
+      case /^diff_days_/.test(a.c):      ok = diffDays >= parseInt(a.c.split('_')[2]); break;
+      // exercise weight threshold (use all-time max)
+      case a.c === 'ex_weight':          ok = a.ceid && (exAllMaxW[a.ceid] || 0) >= a.cv; break;
+      // exercise reps threshold (use all-time max)
+      case a.c === 'ex_reps':            ok = a.ceid && (exAllMaxR[a.ceid] || 0) >= a.cv; break;
     }
     if (ok) { a.unlocked = true; a.date = today; newOnes.push(a); }
   });
@@ -1568,20 +1855,59 @@ function checkAchievements(sessions, maxW, tonnage) {
   return newOnes;
 }
 
+let achFilterActive = 'all';
+const ACH_FILTER_LABELS = {
+  all:     { label:'Все',             dot:null,          cls:'' },
+  unlocked:{ label:'Разблокировано',  dot:null,          cls:'' },
+  tier1:   { label:'Лёгкие',          dot:'#10B981',     cls:'tier-1' },
+  tier2:   { label:'Простые',         dot:'#3B82F6',     cls:'tier-2' },
+  tier3:   { label:'Средние',         dot:'#F59E0B',     cls:'tier-3' },
+  tier4:   { label:'Сложные',         dot:'#EF4444',     cls:'tier-4' },
+  tier5:   { label:'Легенда',         dot:'#a855f7',     cls:'tier-5' },
+};
+const TIER_LABELS = ['','ЛЕГКО','ПРОСТО','СРЕДНЕ','СЛОЖНО','ЛЕГЕНДА'];
+
 function renderAchievements() {
   const achs = get(K.achs) || [];
-  const ul = achs.filter(a => a.unlocked).length;
+  const ul   = achs.filter(a => a.unlocked).length;
   document.getElementById('ach-sub-label').textContent = `${ul} / ${achs.length} разблокировано`;
-  document.getElementById('ach-grid').innerHTML = achs.map(a => `
-    <div class="ach-card ${a.unlocked?'unlocked':'locked'}">
-      ${!a.unlocked ? `<div class="lock-icon"><svg class="ic ic-13" aria-hidden="true"><use href="#ic-lock"></use></svg></div>` : ''}
+
+  // Render filter tabs
+  const filtersEl = document.getElementById('ach-filters');
+  if (filtersEl) {
+    const unlCnt = achs.filter(a => a.unlocked).length;
+    filtersEl.innerHTML = Object.entries(ACH_FILTER_LABELS).map(([k,v]) => {
+      const dot = v.dot ? `<span class="ach-filter-dot" style="background:${v.dot};"></span>` : '';
+      const cnt = k==='all' ? achs.length : k==='unlocked' ? unlCnt :
+                  achs.filter(a => a.tier===parseInt(k[4])).length;
+      return `<button class="ach-filter-btn ${achFilterActive===k?'active':''}" onclick="setAchFilter('${k}')">
+        ${dot}${v.label} <span style="font-family:'JetBrains Mono',monospace;font-size:10px;opacity:0.65;">${cnt}</span>
+      </button>`;
+    }).join('');
+  }
+
+  // Filter
+  let visible = achs;
+  if (achFilterActive === 'unlocked') visible = achs.filter(a => a.unlocked);
+  else if (achFilterActive.startsWith('tier')) visible = achs.filter(a => a.tier === parseInt(achFilterActive[4]));
+
+  document.getElementById('ach-grid').innerHTML = visible.map(a => {
+    const tierCls  = 'tier-' + (a.tier || 3);
+    const tierLbl  = TIER_LABELS[a.tier || 3] || '';
+    return `
+    <div class="ach-card ${a.unlocked?'unlocked':'locked'} ${tierCls}">
+      ${!a.unlocked ? '<div class="lock-icon"><svg class="ic ic-13" aria-hidden="true"><use href="#ic-lock"></use></svg></div>' : ''}
+      <div class="tier-badge">${tierLbl}</div>
       <span class="ach-emoji">${a.e}</span>
       <div class="ach-title">${a.t}</div>
       <div class="ach-desc">${a.d}</div>
-      ${a.unlocked && a.date ? `<div class="ach-date">${a.date}</div>` : ''}
-    </div>
-  `).join('');
-  /* icons are inline SVG */
+      ${a.unlocked && a.date ? '<div class="ach-date">' + a.date + '</div>' : ''}
+    </div>`;
+  }).join('');
+}
+function setAchFilter(f) {
+  achFilterActive = f;
+  renderAchievements();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1754,7 +2080,8 @@ function closeResetAchs() {
   if (el) el.classList.remove('open');
 }
 function resetAchievements() {
-  set(K.achs, ACHIEVEMENTS.map(a => ({...a, unlocked:false, date:null})));
+  set(K.achs, null); // clear so rebuildAchievements starts fresh
+  rebuildAchievements();
   closeResetAchs();
   renderAchievements();
   showToast('🔄 Сброшено', 'Все достижения обнулены');
@@ -1967,15 +2294,72 @@ function renderBuilderExList(mode) {
   if (!listEl) return;
   if (emptyEl) emptyEl.style.display = arr.length ? 'none' : '';
   listEl.innerHTML = arr.map((ex,i) => `
-    <div class="builder-ex-row">
+    <div class="builder-ex-row" draggable="true" data-idx="${i}" data-mode="${mode}">
+      <div class="drag-handle" title="Перетащи для изменения порядка">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+        </svg>
+      </div>
       <div class="ex-label">
         <div class="ex-nm">${ex.name}${ex.bw?'<span class="ex-bw-badge">б/в</span>':''}</div>
-        <div class="ex-grp">${ex.group}</div>
+        <div class="ex-grp">${ex.group} <span style="color:var(--text-dim);font-size:9px;font-family:'JetBrains Mono',monospace;">#${i+1}</span></div>
       </div>
-      <button class="btn-icon btn-danger" style="width:28px;height:28px;" onclick="removeBuilderEx('${mode}',${i})">
-        <svg class="ic ic-13" aria-hidden="true"><use href="#ic-trash"></use></svg>
-      </button>
+      <div style="display:flex;gap:4px;">
+        <button class="btn-icon" style="width:28px;height:28px;" title="Вверх" onclick="moveBuilderEx('${mode}',${i},-1)" ${i===0?'disabled style="opacity:0.3;pointer-events:none;"':''}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+        </button>
+        <button class="btn-icon" style="width:28px;height:28px;" title="Вниз" onclick="moveBuilderEx('${mode}',${i},1)" ${i===arr.length-1?'disabled style="opacity:0.3;pointer-events:none;"':''}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <button class="btn-icon btn-danger" style="width:28px;height:28px;" onclick="removeBuilderEx('${mode}',${i})">
+          <svg class="ic ic-13" aria-hidden="true"><use href="#ic-trash"></use></svg>
+        </button>
+      </div>
     </div>`).join('');
+
+  // Setup drag-and-drop
+  initDragReorder(listEl, mode);
+}
+
+function moveBuilderEx(mode, idx, dir) {
+  const arr = mode === 'new' ? bBuilderExs : bEditExs;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= arr.length) return;
+  [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+  arr.forEach((e,i) => e.order = i+1);
+  renderBuilderExList(mode);
+}
+
+let dragSrcIdx = null;
+function initDragReorder(container, mode) {
+  const rows = container.querySelectorAll('.builder-ex-row');
+  rows.forEach(row => {
+    row.addEventListener('dragstart', e => {
+      dragSrcIdx = parseInt(row.dataset.idx);
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      container.querySelectorAll('.builder-ex-row').forEach(r => r.classList.remove('drag-over'));
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      container.querySelectorAll('.builder-ex-row').forEach(r => r.classList.remove('drag-over'));
+      row.classList.add('drag-over');
+    });
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      const targetIdx = parseInt(row.dataset.idx);
+      if (dragSrcIdx === null || dragSrcIdx === targetIdx) return;
+      const arr = mode === 'new' ? bBuilderExs : bEditExs;
+      const [moved] = arr.splice(dragSrcIdx, 1);
+      arr.splice(targetIdx, 0, moved);
+      arr.forEach((ex,i) => ex.order = i+1);
+      dragSrcIdx = null;
+      renderBuilderExList(mode);
+    });
+  });
 }
 
 // ── New plan ──────────────────────────────────────────────
@@ -2090,6 +2474,15 @@ function deleteEditingPlan() {
 //  PROFILE
 // ═══════════════════════════════════════════════════════════
 function openProfile() {
+  const profile = getProfile();
+  const bwInp  = document.getElementById('p-bodyweight');
+  const htInp  = document.getElementById('p-height');
+  const ageInp = document.getElementById('p-age');
+  const expInp = document.getElementById('p-exp');
+  if (bwInp  && profile.bodyWeight)      bwInp.value  = profile.bodyWeight;
+  if (htInp  && profile.height)          htInp.value  = profile.height;
+  if (ageInp && profile.age)             ageInp.value = profile.age;
+  if (expInp && profile.experienceYears) expInp.value = profile.experienceYears;
   renderProfileList();
   document.getElementById('profile-overlay').classList.add('open');
 }
@@ -2122,6 +2515,15 @@ function saveProfile() {
     const inp = document.getElementById('pex-' + ex.id);
     if (inp) profile[ex.id] = parseFloat(inp.value) || 0;
   });
+  // Save user stats
+  const bwInp  = document.getElementById('p-bodyweight');
+  const htInp  = document.getElementById('p-height');
+  const ageInp = document.getElementById('p-age');
+  const expInp = document.getElementById('p-exp');
+  if (bwInp)  profile.bodyWeight      = parseFloat(bwInp.value)  || 0;
+  if (htInp)  profile.height          = parseFloat(htInp.value)  || 0;
+  if (ageInp) profile.age             = parseInt(ageInp.value)   || 0;
+  if (expInp) profile.experienceYears = parseFloat(expInp.value) || 0;
   saveProfileData(profile);
   // Also sync lw in exercises so PR detection uses profile weight
   const builtinEx = get(K.ex) || EXERCISES;
@@ -2133,8 +2535,9 @@ function saveProfile() {
     plan.exercises.forEach(ex => { if (profile[ex.id] !== undefined) ex.lw = profile[ex.id]; });
   });
   saveCustomPlans(customs);
+  rebuildAchievements(); // regenerate achievements with new profile data
   closeProfile();
-  showToast('✅ Профиль сохранён', 'Рабочие веса обновлены');
+  showToast('✅ Профиль сохранён', 'Рабочие веса и ачивки обновлены');
 }
 
 // ═══════════════════════════════════════════════════════════
