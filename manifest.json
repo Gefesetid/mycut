@@ -1,0 +1,37 @@
+{
+  "name": "MyCut Tracker",
+  "short_name": "MyCut",
+  "description": "Персональный дневник тренировок по железу и бодибилдингу",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#03050A",
+  "theme_color": "#03050A",
+  "lang": "ru",
+  "categories": ["fitness", "health", "sports"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Начать тренировку",
+      "short_name": "Тренировка",
+      "description": "Быстрый старт новой тренировки",
+      "url": "./index.html#workout",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
